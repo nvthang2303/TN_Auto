@@ -1,0 +1,50 @@
+name: TN Auto Build
+
+on:
+  workflow_dispatch:
+    inputs:
+     ROM_URL:
+      description: 'OTA Url ROM'
+      default: 'https://bn.d.miui.com/OS1.0.24.6.17.DEV/miui_FUXI_OS1.0.24.6.17.DEV_dc97d0a93b_14.0.zip'
+      required: true
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean Junks
+        run: |
+          docker rmi `docker images -q` || true
+          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/sudo apt/sources.list.d || true
+          sudo apt -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell mysql* php* || true
+          sudo apt -y autoremove --purge || true
+          sudo apt -y autoclean || true
+          sudo apt clean || true
+
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          swap-size-mb: 1024
+          root-reserve-mb: 512
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+
+      - name: Checkout code
+        uses: actions/checkout@main
+        
+      - name: Update timezone Vietnam
+        run: |
+           sudo timedatectl set-timezone Asia/Ho_Chi_Minh
+
+      - name: Clone Git TN
+        run: |
+          git clone -b 2.5 https://${{ secrets.TNKEY }}@https://github.com/nvthang2303/HyperTN.git
+          
+      - name: Auto build TN
+        run: |
+          cd HyperTN
+           sudo chmod 777 -R *
+           sudo bash setup.sh
+           sudo bash BuildTN.sh ${{ github.event.inputs.ROM_URL }}
+      
