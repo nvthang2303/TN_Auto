@@ -45,8 +45,8 @@ jobs:
           curl https://rclone.org/install.sh | sudo bash
           mkdir -p ~/.config/rclone/
           echo "${{ secrets.RCLONE }}" > token.txt
-          cp token.txt ~/.config/rclone/rclone.conf
-          #base64 -d token.txt > ~/.config/rclone/rclone.conf
+          #cp token.txt ~/.config/rclone/rclone.conf
+          base64 -d token.txt > ~/.config/rclone/rclone.conf
 
       - name: Clone Git TN
         run: |
