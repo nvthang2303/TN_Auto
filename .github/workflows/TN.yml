@@ -24,22 +24,29 @@ jobs:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
-          swap-size-mb: 1024
-          root-reserve-mb: 512
+          swap-size-mb: 8192
+          root-reserve-mb: 4096
+          temp-reserve-mb: 4096
           remove-dotnet: 'true'
           remove-android: 'true'
           remove-haskell: 'true'
 
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@main
         
       - name: Update timezone Vietnam
         run: |
            sudo timedatectl set-timezone Asia/Ho_Chi_Minh
-      - name: Install Stuff
+           
+      - name: PREPARE ENVIRONMENT
         run: |
-          apt update -y && apt upgrade -y >/dev/null 2>&1
-          apt install -y aria2 python3 p7zip-full zipalign android-sdk-libsparse-utils lz4 xz-utils zlib1g-dev openjdk-17-jdk gcc g++ python-is-python3 >/dev/null 2>&1
+          sudo apt update -y && apt upgrade
+          sudo aria2 python3 p7zip-full zipalign android-sdk-libsparse-utils lz4 xz-utils zlib1g-dev openjdk-17-jdk gcc g++ python-is-python3
+          curl https://rclone.org/install.sh | sudo bash
+          mkdir -p ~/.config/rclone/
+          echo "${{ secrets.RCLONE }}" > token.txt
+          cp token.txt ~/.config/rclone/rclone.conf
+          #base64 -d token.txt > ~/.config/rclone/rclone.conf
 
       - name: Clone Git TN
         run: |
@@ -49,6 +56,6 @@ jobs:
         run: |
           cd HyperTN
            sudo chmod 777 -R *
-           sudo bash setup.sh
+           #sudo bash setup.sh
            sudo bash BuildTN.sh ${{ github.event.inputs.ROM_URL }}
       
