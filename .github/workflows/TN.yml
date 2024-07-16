@@ -36,6 +36,10 @@ jobs:
       - name: Update timezone Vietnam
         run: |
            sudo timedatectl set-timezone Asia/Ho_Chi_Minh
+      - name: Install Stuff
+        run: |
+          apt update -y && apt upgrade -y >/dev/null 2>&1
+          apt install -y aria2 python3 p7zip-full zipalign android-sdk-libsparse-utils lz4 xz-utils zlib1g-dev openjdk-17-jdk gcc g++ python-is-python3 >/dev/null 2>&1
 
       - name: Clone Git TN
         run: |
