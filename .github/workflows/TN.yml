@@ -59,7 +59,7 @@ jobs:
            sudo bash BuildTN_vn.sh ${{ github.event.inputs.ROM_URL }}
       - name: Clone Git TN
         run: |
-          rm -rf HyperTN
+          sudo rm -rf HyperTN
           git clone -b 2.5 https://${{ secrets.TNKEY }}@github.com/nvthang2303/HyperTN.git
       - name: Auto build TN (MULTI)
         run: |
