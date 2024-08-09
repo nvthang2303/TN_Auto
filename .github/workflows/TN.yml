@@ -52,10 +52,18 @@ jobs:
         run: |
           git clone -b 2.5 https://${{ secrets.TNKEY }}@github.com/nvthang2303/HyperTN.git
           
-      - name: Auto build TN
+      - name: Auto build TN (VIET)
         run: |
           cd HyperTN
            sudo chmod 777 -R *
-           #sudo bash setup.sh
-           sudo bash BuildTN.sh ${{ github.event.inputs.ROM_URL }}
+           sudo bash BuildTN_vn.sh ${{ github.event.inputs.ROM_URL }}
+      - name: Clone Git TN
+        run: |
+          rm -rf HyperTN
+          git clone -b 2.5 https://${{ secrets.TNKEY }}@github.com/nvthang2303/HyperTN.git
+      - name: Auto build TN (MULTI)
+        run: |
+          cd HyperTN
+           sudo chmod 777 -R *
+           sudo bash BuildTN_multi.sh ${{ github.event.inputs.ROM_URL }}
       
